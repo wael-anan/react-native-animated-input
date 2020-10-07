@@ -137,15 +137,13 @@ const AnimatedInput = ({
             <View style={styles.toucheableLineContent}>
               <>{prefix}</>
               <TextInput
-                {...others}
                 pointerEvents={disabled ? "box-none" : "auto"}
                 selectionColor={styleInput.fontColor}
                 autoFocus
                 blurOnSubmit
                 editable={!disabled}
-                onBlur={() => onBlur()}
                 style={[styles.input, styleInput]}
-                onEndEditing={() => onBlur()}
+                {...others}
               />
             </View>
           )}
