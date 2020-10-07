@@ -21,8 +21,6 @@ const AnimatedInput = ({
   const [showInput, setShowInput] = useState(false);
   const [showError, setShowError] = useState(false);
   const [animatedIsFocused] = useState(new Animated.Value(1));
-  const [isInputFocused, setInputFocus] = useState(false);
-
 
   const inputFontSize = styleInput.fontSize || styles.input.fontSize;
   const labelFontSize = styleLabel.fontSize || styles.label.fontSize;
@@ -48,7 +46,6 @@ const AnimatedInput = ({
   ]);
 
   const onBlur = () => {
-    setInputFocus(false);
     if (!value) {
       setShowInput(false);
       setShowError(false);
@@ -57,7 +54,6 @@ const AnimatedInput = ({
   };
 
   const onFocus = () => {
-    setInputFocus(true);
     if (!showInput) {
       startAnimation();
     }
@@ -75,7 +71,7 @@ const AnimatedInput = ({
   };
 
   const setContentHeight = () => {
-    const fontsHeight = labelFontSize + inputFontSize + errorFontSize + 10;
+    const fontsHeight = labelFontSize + inputFontSize + errorFontSize;
     const internalVerticalSpaces = 16;
     return fontsHeight + internalVerticalSpaces;
   };
@@ -96,7 +92,7 @@ const AnimatedInput = ({
   }, [animatedIsFocused, showInput]);
 
   const animationView = useCallback(() => {
-    const sizeShow = 15 + labelFontSize + inputFontSize + 5;
+    const sizeShow = 15 + labelFontSize + inputFontSize;
     const sizeHide = 15 + labelFontSize;
     const inputAdjust = {
       height: animatedIsFocused.interpolate({
@@ -119,24 +115,18 @@ const AnimatedInput = ({
 
   return (
     <View
-      style={[styles.content, styleContent, { height: setContentHeight() }]}
+      style={[styles.content, styleContent]}
     >
       <Animated.View
         style={[
           styles.bodyContent,
           styleBodyContent,
           borderColor(showError),
-          { 
-            marginBottom: showError ? 0 : getErrorContentSpace(),
-            borderBottomWidth: isInputFocused ? 1.5 : 0.5
-          },
+          { marginBottom: showError ? 0 : getErrorContentSpace() },
           animationView()
         ]}
       >
-        <View style={ style={{
-            flex: 1,
-            justifyContent: 'space-between'
-          }}>
+        <View style={{ flex: 1 }}>
           <Animated.Text
             style={[styles.label, styleLabel, animationLabelFontSize()]}
             onPress={() => !disabled && onFocus()}
@@ -148,7 +138,6 @@ const AnimatedInput = ({
               <>{prefix}</>
               <TextInput
                 {...others}
-                value={value}
                 pointerEvents={disabled ? "box-none" : "auto"}
                 selectionColor={styleInput.fontColor}
                 autoFocus
